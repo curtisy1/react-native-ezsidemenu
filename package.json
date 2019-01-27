@@ -1,14 +1,14 @@
 {
   "name": "react-native-ezsidemenu",
-  "version": "1.2.0",
-  "description": "customizable side menu for React Native on iOS&android.",
-  "main": "index.js",
+  "version": "0.0.1",
+  "description": "customizable side menu for React Native on iOS&android. Re-imagined in TypeScript",
+  "main": "index.tsx",
   "directories": {
     "example": "examples"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/easyui/react-native-ezsidemenu.git"
+    "url": "git+https://github.com/curtisy1/react-native-ezsidemenu.git"
   },
   "keywords": [
     "react",
@@ -24,10 +24,19 @@
     "side menu",
     "drawer"
   ],
-  "author": "Zhu Yangjun (gzhuyangjun@gmail.com)",
+  "author": "Alexander Oberländer",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/easyui/react-native-ezsidemenu/issues"
+    "url": "https://github.com/curtisy/react-native-ezsidemenu/issues"
   },
-  "homepage": "https://github.com/easyui/react-native-ezsidemenu#readme"
+  "homepage": "https://github.com/curtisy/react-native-ezsidemenu#readme",
+  "dependencies": {
+    "react": "16.6.3",
+    "react-native": "^0.58.1",
+    "typescript": "^3.2.4"
+  },
+  "devDependencies": {
+    "@types/react": "^16.7.21",
+    "@types/react-native": "^0.57.32"
+  }
 }
