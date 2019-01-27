@@ -29,14 +29,5 @@
   "bugs": {
     "url": "https://github.com/curtisy/react-native-ezsidemenu/issues"
   },
-  "homepage": "https://github.com/curtisy/react-native-ezsidemenu#readme",
-  "dependencies": {
-    "react": "16.6.3",
-    "react-native": "^0.58.1",
-    "typescript": "^3.2.4"
-  },
-  "devDependencies": {
-    "@types/react": "^16.7.21",
-    "@types/react-native": "^0.57.32"
-  }
+  "homepage": "https://github.com/curtisy/react-native-ezsidemenu#readme"
 }
