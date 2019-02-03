@@ -333,7 +333,7 @@ export default class SideMenu extends Component<SideMenuProps, SideMenuState> {
     let shadowView = null;
     if (this.state.isMoving || this.state.isOpen) {
       shadowView = (<TouchableWithoutFeedback onPress={this.close}>
-        <Animated.View style={[absoluteStyle, shadowStyle]} { ...this.shadowOpacity }>
+        <Animated.View style={[absoluteStyle, shadowStyle]} {...this.shadowOpacity}>
           <View style={{ width: width }}>
           </View>
         </Animated.View>
@@ -355,13 +355,13 @@ export default class SideMenu extends Component<SideMenuProps, SideMenuState> {
       view = <View style={[styles.container, style]} {...this.panResponder.panHandlers}>
         {children}
         {shadowView}
-        <Animated.View style={[absoluteStyle, {width: width }, menuStyle]} {...this.menuLeft}>
+        <Animated.View style={[absoluteStyle, { width: width }, menuStyle]} {...this.menuLeft}>
           {menu}
         </Animated.View>
       </View>
     } else {
       view = <View style={[styles.container, style]} {...this.panResponder.panHandlers}>
-        <Animated.View style={[absoluteStyle, {width: width }, menuStyle]} {...this.menuLeft}>
+        <Animated.View style={[absoluteStyle, { width: width }, menuStyle]} {...this.menuLeft}>
           {menu}
         </Animated.View>
         <Animated.View style={[absoluteStyle, { width: DEVICESCREEN.width }]} {...this.childrenLeft}>
@@ -372,9 +372,7 @@ export default class SideMenu extends Component<SideMenuProps, SideMenuState> {
     }
 
     return (
-      <>
-        view
-      </>
+      view
     );
   }
   //#endregion
