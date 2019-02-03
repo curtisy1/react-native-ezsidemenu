@@ -58,6 +58,7 @@ const DEVICESCREEN = Dimensions.get('window');
 export default class SideMenu extends Component<SideMenuProps, SideMenuState> {
   static direction = direction;
   static type = type;
+  panResponder: PanResponderInstance;
 
   static defaultProps = {
     shadowStyle: { backgroundColor: 'rgba(0,0,0,.4)' },
@@ -84,26 +85,6 @@ export default class SideMenu extends Component<SideMenuProps, SideMenuState> {
     onMenuStateChanged: () => null,
   };
 
-  events: {
-    onPanMoveStart: () => void;
-    onPanMove: () => void;
-    onPanMoveEnd: () => void;
-    onSliding: (e: SlidingEvent) => void;
-    onMenuStateChanged: (isOpen: boolean) => void;
-  };
-
-  panGestures: {
-    panResponder: PanResponderInstance,
-    handleOnStartShouldSetPanResponder: (e: GestureResponderEvent, gestureState: PanResponderGestureState) => boolean,
-    handleOnStartShouldSetPanResponderCapture: (e: GestureResponderEvent, gestureState: PanResponderGestureState) => boolean,
-    handleOnMoveShouldSetPanResponder: (e: GestureResponderEvent, gestureState: PanResponderGestureState) => boolean,
-    handleOnMoveShouldSetPanResponderCapture: (e: GestureResponderEvent, gestureState: PanResponderGestureState) => boolean,
-    handleOnPanResponderTerminationRequest: (e: GestureResponderEvent, gestureState: PanResponderGestureState) => boolean,
-    handleOnPanResponderGrant: (e: GestureResponderEvent, gestureState: PanResponderGestureState) => void,
-    handleOnPanResponderMove: (e: GestureResponderEvent, gestureState: PanResponderGestureState) => void,
-    handleOnPanResponderRelease: (e: GestureResponderEvent, gestureState: PanResponderGestureState) => void,
-    handleOnPanResponderTerminate: (e: GestureResponderEvent, gestureState: PanResponderGestureState) => void,
-  };
 
   isPan: boolean;
   childrenLeft: Animated.AnimatedInterpolation;
@@ -114,27 +95,24 @@ export default class SideMenu extends Component<SideMenuProps, SideMenuState> {
   constructor(props: Readonly<SideMenuProps>) {
     super(props);
 
-    this.open = this.open.bind(this)
-    this.close = this.close.bind(this)
-    this.events = {
-      onPanMoveStart: this.onPanMoveStart.bind(this),
-      onPanMove: this.onPanMove.bind(this),
-      onPanMoveEnd: this.onPanMoveEnd.bind(this),
-      onSliding: this.onSliding.bind(this),
-      onMenuStateChanged: this.onMenuStateChanged.bind(this),
-    }
+    this.open = this.open.bind(this);
+    this.close = this.close.bind(this);
+    this.onPanMoveStart = this.onPanMoveStart.bind(this),
+      this.onPanMove = this.onPanMove.bind(this),
+      this.onPanMoveEnd = this.onPanMoveEnd.bind(this),
+      this.onSliding = this.onSliding.bind(this),
+      this.onMenuStateChanged = this.onMenuStateChanged.bind(this),
 
-    this.panGestures = {      
-      handleOnStartShouldSetPanResponder: this.handleOnStartShouldSetPanResponder.bind(this),
-      handleOnStartShouldSetPanResponderCapture: this.handleOnStartShouldSetPanResponderCapture.bind(this),
-      handleOnMoveShouldSetPanResponder: this.handleOnMoveShouldSetPanResponder.bind(this),
-      handleOnMoveShouldSetPanResponderCapture: this.handleOnMoveShouldSetPanResponderCapture.bind(this),
-      handleOnPanResponderTerminationRequest: this.handleOnPanResponderTerminationRequest.bind(this),
-      handleOnPanResponderGrant: this.handleOnPanResponderGrant.bind(this),
-      handleOnPanResponderMove: this.handleOnPanResponderMove.bind(this),
-      handleOnPanResponderRelease: this.handleOnPanResponderEnd.bind(this),
-      handleOnPanResponderTerminate: this.handleOnPanResponderEnd.bind(this),
-      panResponder: PanResponder.create({
+      this.handleOnStartShouldSetPanResponder = this.handleOnStartShouldSetPanResponder.bind(this),
+      this.handleOnStartShouldSetPanResponderCapture = this.handleOnStartShouldSetPanResponderCapture.bind(this),
+      this.handleOnMoveShouldSetPanResponder = this.handleOnMoveShouldSetPanResponder.bind(this),
+      this.handleOnMoveShouldSetPanResponderCapture = this.handleOnMoveShouldSetPanResponderCapture.bind(this),
+      this.handleOnPanResponderTerminationRequest = this.handleOnPanResponderTerminationRequest.bind(this),
+      this.handleOnPanResponderGrant = this.handleOnPanResponderGrant.bind(this),
+      this.handleOnPanResponderMove = this.handleOnPanResponderMove.bind(this),
+      this.handleOnPanResponderRelease = this.handleOnPanResponderEnd.bind(this),
+      this.handleOnPanResponderTerminate = this.handleOnPanResponderEnd.bind(this),
+      this.panResponder = PanResponder.create({
         onStartShouldSetPanResponder: this.handleOnStartShouldSetPanResponder,
         onStartShouldSetPanResponderCapture: this.handleOnStartShouldSetPanResponderCapture,
         onMoveShouldSetPanResponder: this.handleOnMoveShouldSetPanResponder,
@@ -145,9 +123,8 @@ export default class SideMenu extends Component<SideMenuProps, SideMenuState> {
         onPanResponderRelease: this.handleOnPanResponderRelease,
         onPanResponderTerminate: this.handleOnPanResponderTerminate,
       }),
-    }
 
-    this.isPan = false
+      this.isPan = false
     this.isVerticalMoved = false
 
     const { position } = props;
@@ -157,7 +134,7 @@ export default class SideMenu extends Component<SideMenuProps, SideMenuState> {
       isMoving: false
     };
 
-    position.addListener(this.events.onSliding);
+    position.addListener(this.onSliding);
 
 
     this.childrenLeft = this.props.direction === direction.Left ?
@@ -188,7 +165,7 @@ export default class SideMenu extends Component<SideMenuProps, SideMenuState> {
 
   componentWillUpdate(newProps: SideMenuProps, newState: SideMenuState) {
     if (newState.isOpen !== this.state.isOpen) {
-      this.events.onMenuStateChanged(newState.isOpen);
+      this.onMenuStateChanged(newState.isOpen);
     }
   }
   //#endregion
@@ -306,7 +283,7 @@ export default class SideMenu extends Component<SideMenuProps, SideMenuState> {
   };
 
   handleOnPanResponderGrant(evt: GestureResponderEvent, gestureState: PanResponderGestureState) {
-    this.events.onPanMoveStart();
+    this.onPanMoveStart();
     this.state.position.setOffset(this.state.position);
     this.state.position.setValue(0);
   };
@@ -318,13 +295,13 @@ export default class SideMenu extends Component<SideMenuProps, SideMenuState> {
     const x = Math.max(Math.min(position, this.props.width - this.state.position.offset), this.state.isOpen ? - this.props.width : 0);
     if (x !== this.state.position.value) {
       this.state.position.setValue(x);
-      this.events.onPanMove();
+      this.onPanMove();
     }
   };
 
-  handleOnPanResponderEnd(evt: any, gestureState: { vx: number; }) {
+  handleOnPanResponderEnd(evt: GestureResponderEvent, gestureState: PanResponderGestureState) {
     this.isPan = false;
-    this.events.onPanMoveEnd();
+    this.onPanMoveEnd();
 
     this.state.position.flattenOffset();
     const velocity = this.props.direction === direction.Left ? gestureState.vx : -gestureState.vx;
@@ -340,12 +317,10 @@ export default class SideMenu extends Component<SideMenuProps, SideMenuState> {
     }
   };
 
-  handleOnPanResponderRelease() {
-    return false;
+  handleOnPanResponderRelease(evt: GestureResponderEvent, gestureState: PanResponderGestureState) {
   };
 
-  handleOnPanResponderTerminate() {
-    return false;
+  handleOnPanResponderTerminate(evt: GestureResponderEvent, gestureState: PanResponderGestureState) {
   };
   //#endregion
 
@@ -358,7 +333,7 @@ export default class SideMenu extends Component<SideMenuProps, SideMenuState> {
     let shadowView = null;
     if (this.state.isMoving || this.state.isOpen) {
       shadowView = (<TouchableWithoutFeedback onPress={this.close}>
-        <Animated.View style={[absoluteStyle, { opacity: this.shadowOpacity }, shadowStyle]}>
+        <Animated.View style={[absoluteStyle, shadowStyle]} { ...this.shadowOpacity }>
           <View style={{ width: width }}>
           </View>
         </Animated.View>
@@ -367,29 +342,29 @@ export default class SideMenu extends Component<SideMenuProps, SideMenuState> {
 
     let view: JSX.Element;
     if (propType === type.Default) {
-      view = <View style={[styles.container, style]} {...this.panGestures.panResponder.panHandlers}>
+      view = <View style={[styles.container, style]} {...this.panResponder.panHandlers}>
         <View style={[absoluteStyle, { [propDirection === direction.Left ? 'right' : 'left']: DEVICESCREEN.width - width }, menuStyle]}>
           {menu}
         </View>
-        <Animated.View style={[absoluteStyle, { left: this.childrenLeft, width: DEVICESCREEN.width }]}>
+        <Animated.View style={[absoluteStyle, { width: DEVICESCREEN.width }]} {...this.childrenLeft}>
           {children}
           {shadowView}
         </Animated.View>
       </View>
     } else if (propType === type.Overlay) {
-      view = <View style={[styles.container, style]} {...this.panGestures.panResponder.panHandlers}>
+      view = <View style={[styles.container, style]} {...this.panResponder.panHandlers}>
         {children}
         {shadowView}
-        <Animated.View style={[absoluteStyle, { left: this.menuLeft, width: width }, menuStyle]}>
+        <Animated.View style={[absoluteStyle, {width: width }, menuStyle]} {...this.menuLeft}>
           {menu}
         </Animated.View>
       </View>
     } else {
-      view = <View style={[styles.container, style]} {...this.panGestures.panResponder.panHandlers}>
-        <Animated.View style={[absoluteStyle, { left: this.menuLeft, width: width }, menuStyle]}>
+      view = <View style={[styles.container, style]} {...this.panResponder.panHandlers}>
+        <Animated.View style={[absoluteStyle, {width: width }, menuStyle]} {...this.menuLeft}>
           {menu}
         </Animated.View>
-        <Animated.View style={[absoluteStyle, { left: this.childrenLeft, width: DEVICESCREEN.width }]}>
+        <Animated.View style={[absoluteStyle, { width: DEVICESCREEN.width }]} {...this.childrenLeft}>
           {children}
           {shadowView}
         </Animated.View>
